@@ -10,8 +10,8 @@
 <h2>Languages</h2>
 <ul>
   <li>Python</li>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" />
-<li>C++</li>
+  
+<li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 10px; height: 10px;" />C++</li>
   <li>Scratch</li>
   <li>HTML/CSS</li>
 </ul>
