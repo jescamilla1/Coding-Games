@@ -11,7 +11,7 @@
 <ul>
   <li>Python</li>
   
-<li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 10px; height: 10px;" />C++</li>
+<li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 20px; height: 20px;" />C++</li>
   <li>Scratch</li>
   <li>HTML/CSS</li>
 </ul>
