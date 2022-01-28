@@ -19,16 +19,16 @@
 <p>See the code in action on Replit!</p>
 <ul>
   <li><a href="https://replit.com/@jescamilla/Choose-a-Shape?v=1">Choose a Shape</a></li>
-  <li><a href="#">Riddles</a></li>
-  <li><a href="#">Number Guesser</a></li>
-  <li><a href="#">Animated Circle</a></li>
-  <li><a href="#">Trial and Error Counting</a></li>
-  <li><a href="#">ToDoList</a></li>
-  <li><a href="#">Dice Simulator</a></li>
-  <li><a href="#">Password Authenticator</a></li>
-  <li><a href="#">QR Code Generator</a></li>
-  <li><a href="#">Stop Watch</a></li>
-  <li><a href="#">Login and Registration System</a></li>
+  <li><a href="https://replit.com/@jescamilla/Riddles?v=1">Riddles</a></li>
+  <li><a href="https://replit.com/@jescamilla/Number-Guesser?v=1">Number Guesser</a></li>
+  <li><a href="https://replit.com/@jescamilla/Growing-Circle?v=1">Animated Circle</a></li>
+  <li><a href="https://replit.com/@jescamilla/trial-and-error-counting?v=1">Trial and Error Counting</a></li>
+  <li><a href="https://replit.com/@jescamilla/ToDoList?v=1">ToDoList</a></li>
+  <li><a href="https://replit.com/@jescamilla/Dice?v=1">Dice Simulator</a></li>
+  <li><a href="https://replit.com/@jescamilla/Password-Authentication?v=1">Password Authenticator</a></li>
+  <li><a href="https://replit.com/@jescamilla/QR-Code-generator?v=1">QR Code Generator</a></li>
+  <li><a href="https://replit.com/@jescamilla/stop-watch?v=1">Stop Watch</a></li>
+  <li><a href="https://replit.com/@jescamilla/Login-and-Registration-System?v=1">Login and Registration System</a></li>
 </ul>
 
 </body>
