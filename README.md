@@ -8,11 +8,11 @@
 <p>The projects compiled are written to demonstrate basic concepts and can be built upon.</p>
 
 <h2>Languages</h2>
-<ul>
+
   <li>Python</li>
   
-<li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 30px; height: 30px;" /></li>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 30px; height: 30px;" />
   <li>Scratch</li>
   <li>HTML/CSS</li>
-</ul>
+
 </body>
