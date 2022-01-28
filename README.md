@@ -10,9 +10,9 @@
 
 <div style="display: block; padding: 50px;">
   <a href="https://github.com/jescamilla1/Learn-to-Code/tree/main/Python"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original-wordmark.svg" style="width: 30px; height: 30px;"/></a>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 30px; height: 30px; " />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original-wordmark.svg" style="width: 30px; height: 30px; "/>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original-wordmark.svg" style="width: 30px; height: 30px; "/> 
+  <a href="https://github.com/jescamilla1/Learn-to-Code/tree/main/C%2B%2B"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" style="width: 30px; height: 30px; " /></a>
+  <a href="#"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original-wordmark.svg" style="width: 30px; height: 30px; "/></a>
+  <a href="#"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original-wordmark.svg" style="width: 30px; height: 30px; "/> </a>
 </div>
   
 <h2>Projects</h2>
