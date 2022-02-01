@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <ctype.h> // for tolower()
+#include <ctype.h> /* for tolower() */
 
-int board[4][4] = {};
+int board[4][4] = {0};
 int i,j;
 void GameBoard(){
     for (i = 0; i<4; i++ ){
@@ -29,33 +29,39 @@ char getDirection(){
     return choice;
 }
 void testFile(char *fileName){
+    /*WORK ON THIS 2/1*/
     printf("%s", fileName);
 }
 void moveUP(){
     printf("Moving up");
+    /*move from bottom up so i = 4*/
 }
 void moveDown(){
+    /*move from up to bottom so i = 0*/
     printf("Moving down");
 }
 void moveLeft(){
+    /*move from right to left so j = 4*/
     printf("Moving Left");
 }
 void moveRight(){
     printf("Moving Right");
+    /*move from left to right so j = 4*/
+    
 }
  
 int main( int argc, char *argv[]){
     char ch;
-    // Check commandline args
+    /* Check commandline args */
     if(argc == 2){
         testFile(argv[1]);
     }
     else{
         printf("New Game\n\n\n");
     }
-    //GameBoard();
+    /* GameBoard(); */
 
-    // Execute direction with appropriate function
+    /* Execute direction with appropriate function */
     ch = getDirection();
     switch(ch){
         case 'u':
