@@ -29,8 +29,39 @@ char getDirection(){
     return choice;
 }
 void testFile(char *fileName){
-    /*WORK ON THIS 2/1*/
-    printf("%s", fileName);
+    char ch;
+    int i =0;
+    int j = 0;
+    
+    /*open file*/
+    FILE *fptr;
+    fptr = fopen(fileName,"r");
+
+    /*iterate through file*/
+    while(!feof(fptr)){
+        ch = fgetc(fptr);
+        if(ch == '\n'){
+            i++;
+        }
+        else if(isalpha(ch) || ch == ' '){
+            if(j == 4){
+                j = 0;
+            }
+            board[i][j] = ch;
+            j++;
+        }
+    }
+    /*
+    for testing purposes
+    printf("print board\n");
+    for(i = 0; i<4;i++){
+        for(j = 0; j<4; j++){
+            printf("%c : %d %d\n", board[i][j], i, j);
+        }
+    }
+    */
+    /*close file*/
+    fclose(fptr); 
 }
 void moveUP(){
     printf("Moving up");
@@ -59,7 +90,7 @@ int main( int argc, char *argv[]){
     else{
         printf("New Game\n\n\n");
     }
-    /* GameBoard(); */
+    GameBoard(); 
 
     /* Execute direction with appropriate function */
     ch = getDirection();
