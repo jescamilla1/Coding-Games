@@ -1,211 +1,214 @@
-from queue import Queue # for depth first search
 import random
+from queue import Queue 
 from colorama import Fore 
 
-# declare globals
-mines = []
-flags = set() # use set() to differentiate from dict
-SIZE = 10 # size of board and number of mines
+class Board:
+    def __init__(self, board_size, num_bombs):
+        self.board_size = board_size
+        self.num_bombs = num_bombs
+        self.flags_placed = 0
+        self.bomb_locations = set()
+        self.flags = set()
 
-def create_mine_field():
-    board = []
-    # creates board with all 0s 8x8
-    # range does not include 8 therefore 0-7
-    row = []
-    for i in range(SIZE):
-        for j in range(SIZE):
-            row.append(0)
-        board.append(row)
-        row = []
+        self.cover = self.create_cover_field()
+        self.board = self.create_new_board()
         
-    # creates list of mines
-    global mines
-    while len(mines) != 10:
-        m = [random.randint(0, SIZE-1),random.randint(0,SIZE - 1)] # use 0-7 since randint includes 7
-        if m in mines:
-            continue
-        mines.append(m)
+        
+
+    def create_cover_field(self):
+        cover = [["#" for _ in range(self.board_size)] for _ in range (self.board_size)]
+        return cover
+
+    def create_new_board(self):
+        board = [[0 for _ in range(self.board_size)] for _ in range (self.board_size)]
+
+        # create bombs
+        bombs_planted = 0
+        while bombs_planted < self.num_bombs:
+            bomb = (random.randint(0, self.board_size - 1),random.randint(0,self.board_size - 1)) # create tuple of bomb location
             
-    # place mines onto board
-    for mine in mines:
-        m_row = mine[0]
-        m_col = mine[1]
+            if bomb not in self.bomb_locations:
+                self.bomb_locations.add(bomb)
+                bombs_planted += 1
 
-        board[m_row][m_col] = "*"
+        # place bombs onto board
+        for bomb in self.bomb_locations:
+            bomb_row = bomb[0]
+            bomb_col = bomb[1]
 
-        mine_neighbors = get_neighbors(board, m_row, m_col) # get neighbors of mines
-        for n in mine_neighbors: # add to values of neighbors
-            board = add_neighbor_val(board, n[0], n[1])
+            board[bomb_row][bomb_col] = "*"
+
+            # use neighbors for range 
+            # neighbors do not include bombs
+            bomb_neighbors = self.get_neighbors(board,bomb_row, bomb_col)
+            for location in bomb_neighbors:
+                row = location[0]
+                col = location[1]
+                board = self.update_bomb_range(board, row, col)
+
+
+        return board
+
+    def get_neighbors(self,temp_board, bomb_row, bomb_col):
+        # returns list of neighbors not including those with bombs
+        bomb_neighbors = set()
+        # boundaries
+        MAX_RIGHT = self.board_size - 1
+        MAX_LEFT = 0
+        MAX_UP = 0
+        MAX_DOWN = self.board_size - 1
+
+        for i in [-1,0,1]:
+            for j in [-1,0,1]:
+                ROW = bomb_row + i
+                COL = bomb_col + j
+                # check if within range
+                if MAX_UP <= ROW <= MAX_DOWN and MAX_LEFT <= COL <= MAX_RIGHT:
+                    #cannot access board because it is in process of being created
+                    # board calls make board, make board calls get_neighbors, get_neightbors wants to access board, but board has not been returned at all
+                    # TODO: have the functions be seperate and not rely on echother 
+                    if temp_board[ROW][COL] != '*':
+                        bomb_neighbors.add((ROW,COL)) 
+        return bomb_neighbors
+
+    def update_bomb_range(self, board, row, col):
+        board[row][col] += 1
+        return board
     
-    return board
+    def uncover_from_position(self,row,col):
+        # uncover bomb then return cover to display updated board and false for not safe
+        if self.board[row][col] == "*":
+            self.cover[row][col] = self.board[row][col]
+            return False
 
-# returns board with updated value
-def add_neighbor_val(board, row, col):
-    # note: neighbors do not include pos of mines
-    board[row][col] += 1     
-    return board
-    
-def showBoard(board):
-    # DIY output for visual
-    print("  ", end =" ")
-    for n in range(SIZE):
-        print(n , end=" ")
-    print("\n")
-    for i in range(SIZE):
-        print( i , end = "  ")
-        for j in range(10):
-            if isinstance(board[i][j], int): # check if board holds an int
-                if board[i][j] == 1:
-                    print(Fore.LIGHTCYAN_EX + str(board[i][j]) + Fore.RESET, end=" ")
-                elif board[i][j] == 2:
-                    print(Fore.BLUE + str(board[i][j]) + Fore.RESET, end=" ")
-                elif board[i][j] == 3:
-                    print(Fore.LIGHTMAGENTA_EX + str(board[i][j]) + Fore.RESET, end=" ")
-                elif board[i][j] == 4:
-                    print(Fore.LIGHTRED_EX + str(board[i][j]) + Fore.RESET, end=" ")
-                else: 
-                    print(board[i][j], end=" ")
-            elif board[i][j] == "*":
-                print(Fore.RED + str(board[i][j]) + Fore.RESET, end=" ")
-            elif board[i][j] == "#":
-                print(Fore.LIGHTGREEN_EX + str(board[i][j]) + Fore.RESET, end=" ")
-            elif board[i][j] == "&":
-                print(Fore.LIGHTYELLOW_EX + str(board[i][j]) + Fore.RESET, end=" ")
-            else:
-                print(board[i][j], end=" ")
-        print()
-    print()
+        if self.cover[row][col] == "&":
+            # must remove flag before revealing
+            print("Invalid Move! Remove Flag")
+            return True
+        q = Queue()
+        q.put((row,col))
+        visited = set()
 
-def create_cover_field():
-    # creates field using hashtags
-    board = []
+        while not q.empty():
+            current = q.get()
+            current_row = current[0]
+            current_col = current[1]
 
-    row = []
-    for i in range(10):
-        for j in range(10):
-            row.append('#')
-        board.append(row)
-        row = []
-    return board
+            neighbors = self.get_neighbors(self.board, current_row,current_col)
 
+            for location in neighbors:
+                if location in visited or location in self.flags:
+                    continue
+                loc_row = location[0]
+                loc_col = location[1]
 
-def uncover_from_position(board, cover, row, col):
+                value = self.board[loc_row][loc_col]
 
-    # uncover bomb then return cover to display updated board and false for not safe
-    if board[row][col] == "*":
-        cover[row][col] = board[row][col]
-        return cover, False
+                self.cover[loc_row][loc_col] = value # reveal position in cover 
+                if value == 0:
+                    q.put(location)
+                visited.add(location)
 
-    q = Queue()
-    q.put((row,col))
-    visited = set()
-
-    while not q.empty():
-        current = q.get()
-        neighbors = get_neighbors(board, current[0], current[1])
-
-        for n in neighbors:
-            if n in visited or n in flags:
-                continue
-            value = board[n[0]][n[1]]
-            cover[n[0]][n[1]] = value
-            if value == 0:
-                q.put(n)
-            visited.add(n)
-    return cover, True
-
-
-def get_neighbors(board, row, col):
-    # returns list of neighbors not including those with bombs
-    neighbors = []
-
-    MAX_RIGHT = 9
-    MAX_LEFT = 0
-    MAX_UP = 0
-    MAX_DOWN = 9
-    for i in [-1,0,1]:
-        for j in [-1,0,1]:
-            # check if within range
-            ROW = row + i
-            COL = col + j
-            if MAX_UP <= ROW <= MAX_DOWN and MAX_LEFT <= COL <= MAX_RIGHT:
-                if board[ROW][COL] != '*':
-                    neighbors.append((ROW,COL)) # if not mine add to neightbor
-    return neighbors
-
-def insert_flag(cover, row, col):
-    # insert flag if available
-    if 0 < len(flags) <= 10:
-        if cover[row][col] == "#":
-            cover[row][col] = "&"
-            flags.add((row,col))
-    return cover
-
-def remove_flag(cover, row, col):
-    # remove flag
-    if cover[row][col] == "&":
-        cover[row][col] = "#"
-        flags.remove((row,col))
-    return cover
-
-def check_win(cover):
-    # win if 10 uncovered spots and 10 bombs
-    global mines
-    uncovered = 0
-    for i in range(SIZE):
-        for j in range(SIZE):
-            if cover[i][j] == "#" or cover[i][j] == "&":
-                uncovered += 1
-    if uncovered == len(mines):
         return True
-    return False
-
-while True:
-    # create board and place bombs
-    mineField = create_mine_field()
-    # showBoard(mineField)
-    # print(mines)
-    # create cover board that user will see
-    coverField = create_cover_field()
-
-    safe = True
-    while safe:
-        #showBoard(mineField)
-        showBoard(coverField)
-
-        choice = int(input("1. Reveal location\n2. Insert Flag\n3. Remove Flag\nEnter choice: "))
-        while choice not in [1,2,3]:
-            print("invalid input!")
-            choice = int(input("1. Reveal location\n2. Insert Flag\n3. Remove Flag\nEnter choice: "))
+    
+    def display_board(self):
         print()
+        for r in range(self.board_size):
+            for c in range(self.board_size):
+                if isinstance(self.cover[r][c], int):
+                    print(Fore.BLUE + str(self.cover[r][c]) + Fore.RESET, end=" ")
+                elif self.cover[r][c] == "#":
+                    print(Fore.GREEN + str(self.cover[r][c]) + Fore.RESET, end=" ")
+                elif self.cover[r][c] == "*":
+                    print(Fore.RED + str(self.cover[r][c]) + Fore.RESET, end=" ")
+                elif self.cover[r][c] == "&":
+                    print(Fore.LIGHTRED_EX + str(self.cover[r][c]) + Fore.RESET, end=" ")
+                else:
+                    print(str(self.cover[r][c]), end=" ")
+            print()
+        print()
+
+    def place_flag(self, row, col):
+        # insert flag if available
+        if 0 <= self.flags_placed <= 10:
+            if self.cover[row][col] == "#":
+                self.cover[row][col] = "&"
+                self.flags.add((row,col))
+                self.flags_placed += 1
+                return True
+        return False
+    
+    def remove_flag(self,row,col):
+        # remove flag
+        if self.cover[row][col] == "&":
+            self.cover[row][col] = "#"
+            self.flags.remove((row,col))
+            self.flags_placed -= 1
+            return True
+        return False
+
+    def check_win(self):
+        # win if 10 uncovered spots and 10 bombs
+        uncovered = 0
+        for i in range(self.board_size):
+            for j in range(self.board_size):
+                if self.cover[i][j] == "#" or self.cover[i][j] == "&":
+                    uncovered += 1
+        if uncovered == len(self.bomb_locations):
+            return True
+        return False
+# play the game
+def play(board_size=10, num_bombs=10):
+    while True:
+        board = Board(board_size, num_bombs)
 
         
-        row, col = int(input("Enter Row: ")), int(input("Enter Col: "))
-        print()
-        while not (0 <= row <= 9) and not (0 <= col <= 9):
-            print("invalid input!")
+        safe = True
+        while safe:
+            board.display_board()
+
+            # ask for next move
+            print("Moves:")
+            choice = int(input("1. Dig\n2. Place Flag\n3. Remove Flag\nEnter Choice: "))
+            while choice not in [1,2,3]:
+                print("Invalid Move!")
+                choice = int(input("1. Reveal location\n2. Insert Flag\n3. Remove Flag\nEnter choice: "))
+
+            # enter coordinate
             row, col = int(input("Enter Row: ")), int(input("Enter Col: "))
 
+            while not (0 <= row <= board_size-1) and not (0 <= col <= board_size):
+                print("Invalid Location!")
+                row, col = int(input("Enter Row: ")), int(input("Enter Col: "))
 
-        if choice == 1:
-            coverField, safe = uncover_from_position(mineField, coverField, row, col)
-        elif choice == 2:
-            coverField = insert_flag(coverField, row, col)
-        elif choice == 3:
-            coverField = remove_flag(coverField, row, col)
+            # call appropriate functions for move
+            if choice == 1:
+                safe = board.uncover_from_position(row,col)
+                if not safe:
+                    print("You Lost. RIP")
+                    continue
+            elif choice == 2:
+                flag_placed = board.place_flag(row, col)
+                if not flag_placed:
+                    print("Flag Not Placed")
+                    continue
+            elif choice == 3:
+                flag_removed = board.remove_flag(row, col)
+                if not flag_removed:
+                    print("Flag Not Removed")
+                    continue
 
-        if not safe:
-            showBoard(coverField)
-            print("you lost")
-            continue;
-        if check_win(coverField):
-            print("You Won")
+            if board.check_win():
+                print("You Win. Great work")
+                break
+
+        board.display_board()
+        choice = int(input("Do you want to continue: 1. yes 2. no: "))
+        if choice == 2:
+            print("thank you for playing")
             break;
-    choice = int(print("Do you want to continue: 1. yes 2. no"))
-    if choice == 2:
-        print("thank you for playing")
-        break;
-    else:
-        print("here we go again")
-        continue;
-
+        else:
+            print("here we go again")
+            continue;
+if __name__=='__main__':
+    play()
