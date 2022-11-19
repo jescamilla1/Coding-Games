@@ -1,6 +1,11 @@
 import random
 import os
 
+"""
+https://www.baeldung.com/cs/2048-algorithm
+http://ovolve.github.io/2048-AI/
+"""
+
 def create_board():
     board = []
     for i in range (4):
