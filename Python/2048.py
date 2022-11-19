@@ -11,7 +11,7 @@ def show_board(board):
     print("----2048----")
     for i in range(4):
         for j in range(4):
-            print( "|" + board[i][j], end="|")
+            print( "[" + board[i][j], end="]")
         print()
 
 def add_number(board):
@@ -29,10 +29,27 @@ def add_number(board):
 
     return board
 
-def move_left(board, ):
+def rotate_board(board):
+    N = 4
+    # Consider all squares one by one
+    for x in range(0, int(N / 2)):
+        # Consider elements in group
+        # of 4 in current square
+        for y in range(x, N-x-1):
+            # store current cell in temp variable
+            temp = board[x][y]
+            # move values from right to top
+            board[x][y] = board[y][N-1-x]
+            # move values from bottom to right
+            board[y][N-1-x] = board[N-1-x][N-1-y]
+            # move values from left to bottom
+            board[N-1-x][N-1-y] = board[N-1-y][x]
+            # assign temp to left
+            board[N-1-y][x] = temp
+    return board
 
+def slide():
     pass
-
 
 b = create_board()
 # show_board(b)
@@ -41,10 +58,16 @@ b = create_board()
 b = add_number(b)
 b = add_number(b)
 
-while True:
-    show_board(b)
-    b = add_number(b)
+show_board(b)
+b = rotate_board(b)
+show_board(b)
 
-    # ask for movement
+# while True:
+#     show_board(b)
+#     b = add_number(b)
 
-    break
+#     # ask for movement
+#     dir = input("Enter Direction to move [A] [W] [S] [D]: ")
+
+
+#     break
