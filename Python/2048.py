@@ -9,14 +9,14 @@ http://ovolve.github.io/2048-AI/
 def create_board():
     board = []
     for i in range (4):
-        board.append([" ", " "," "," "])
+        board.append([0, 0,0,0])
     return board
 
 def show_board(board):
     print("----2048----")
     for i in range(4):
         for j in range(4):
-            print( "[" + board[i][j], end="]")
+            print( "[{out}".format(out = " " if board[i][j] == 0 else str(board[i][j])) , end="]")
         print()
 
 def add_number(board):
@@ -53,19 +53,25 @@ def rotate_board(board):
             board[N-1-y][x] = temp
     return board
 
-def slide():
+def slide(board):
+    # for row in board:
+    #     for col in board: 
+    #         pass
+            
     pass
 
 b = create_board()
-# show_board(b)
+show_board(b)
 
 # add 2 tiles to begin the game
 b = add_number(b)
 b = add_number(b)
 
 show_board(b)
-b = rotate_board(b)
-show_board(b)
+
+# show_board(b)
+# b = rotate_board(b)
+# show_board(b)
 
 # while True:
 #     show_board(b)
