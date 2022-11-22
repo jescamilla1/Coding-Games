@@ -9,14 +9,14 @@ http://ovolve.github.io/2048-AI/
 def create_board():
     board = []
     for i in range (4):
-        board.append([0, 0,0,0])
+        board.append([0, 0,0,0]) # turn into int array
     return board
 
 def show_board(board):
     print("----2048----")
     for i in range(4):
         for j in range(4):
-            print( "[{out}".format(out = " " if board[i][j] == 0 else str(board[i][j])) , end="]")
+            print( "[{out}".format(out = " " if board[i][j] == 0 else str(board[i][j])) , end="]") # print space if 0 else print the string of the num
         print()
 
 def add_number(board):
@@ -59,6 +59,26 @@ def slide(board):
     #         pass
             
     pass
+"""
+code to find all non zero values
+board = [[0,0,0,0],[1,2,0,0], [0,3,0,0], [1,0,0,1]]
+
+values = []
+
+for idx, val in enumerate(board):
+    for jdx, val2 in enumerate(val):
+        if val2 != 0:
+            print(idx-1,jdx, val)
+"""
+"""
+    recursion swap values
+
+    base if val[idx] == 2 and step + 1 != 0
+        swap
+    if val[idx] == 2 and idx + 1 == 0
+        
+
+"""
 
 b = create_board()
 show_board(b)
